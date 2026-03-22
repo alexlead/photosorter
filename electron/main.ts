@@ -58,7 +58,10 @@ function createAboutWindow() {
         <p style="margin-bottom: 1rem;"><strong>Technologies:</strong> Electron, React, Vite, TypeScript, Tailwind CSS.</p>
         <p style="margin-bottom: 0.5rem; font-weight: 600;">Author: Aleksandr Razavodovskii</p>
         <p><a href="https://github.com/alexlead/photosorter" style="color: #2563eb; text-decoration: none;">https://github.com/alexlead/photosorter</a></p>
+        <p><a href="https://github.com/alexlead/photosorter/blob/main/LICENSE" style="color: #2563eb; text-decoration: none;">License: MIT</a></p>
+        <p><a href="https://github.com/alexlead/photosorter/blob/main/CHANGELOG.md" style="color: #2563eb; text-decoration: none;">Changelog</a></p>
         <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">Version: ${app.getVersion()}</div>
+        <div style="margin-top: 2rem; font-size: 1.2rem;">If you like the app, you can <a href="https://ko-fi.com/aleksandrrazvodovskii">support me</a> on Ko-fi.</div>
       </body>
     </html>
   `

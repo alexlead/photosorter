@@ -1,15 +1,15 @@
-import { ipcMain as P, dialog as K, app as w, BrowserWindow as L, Menu as z, shell as X } from "electron";
+import { ipcMain as P, dialog as J, app as b, BrowserWindow as k, Menu as V, shell as X } from "electron";
 import { fileURLToPath as Z } from "node:url";
 import e from "node:path";
 import ee from "os";
 import o from "fs";
 const F = e.dirname(Z(import.meta.url)), te = () => ee.platform() === "win32" ? process.env.SystemDrive || "C:\\" : "/", O = () => e.dirname(process.execPath);
 process.env.APP_ROOT = e.join(F, "..");
-const j = process.env.VITE_DEV_SERVER_URL, ce = e.join(process.env.APP_ROOT, "dist-electron"), U = e.join(process.env.APP_ROOT, "dist");
-process.env.VITE_PUBLIC = j ? e.join(process.env.APP_ROOT, "public") : U;
+const L = process.env.VITE_DEV_SERVER_URL, ce = e.join(process.env.APP_ROOT, "dist-electron"), N = e.join(process.env.APP_ROOT, "dist");
+process.env.VITE_PUBLIC = L ? e.join(process.env.APP_ROOT, "public") : N;
 let p;
 function oe() {
-  const d = new L({
+  const d = new k({
     width: 450,
     height: 380,
     resizable: !1,
@@ -28,7 +28,10 @@ function oe() {
         <p style="margin-bottom: 1rem;"><strong>Technologies:</strong> Electron, React, Vite, TypeScript, Tailwind CSS.</p>
         <p style="margin-bottom: 0.5rem; font-weight: 600;">Author: Aleksandr Razavodovskii</p>
         <p><a href="https://github.com/alexlead/photosorter" style="color: #2563eb; text-decoration: none;">https://github.com/alexlead/photosorter</a></p>
-        <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">Version: ${w.getVersion()}</div>
+        <p><a href="https://github.com/alexlead/photosorter/LICENSE" style="color: #2563eb; text-decoration: none;">License: MIT</a></p>
+        <p><a href="https://github.com/alexlead/photosorter/CHANGELOG.md" style="color: #2563eb; text-decoration: none;">Changelog</a></p>
+        <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">Version: ${b.getVersion()}</div>
+        <div style="margin-top: 2rem; font-size: 1.2rem;">If you like the app, you can <a href="https://ko-fi.com/aleksandrrazvodovskii">support me</a> on Ko-fi.</div>
       </body>
     </html>
   `;
@@ -49,18 +52,18 @@ function ne() {
         { role: "quit" }
       ]
     }
-  ], m = z.buildFromTemplate(d);
-  z.setApplicationMenu(m);
+  ], m = V.buildFromTemplate(d);
+  V.setApplicationMenu(m);
 }
-function N() {
-  ne(), p = new L({
+function U() {
+  ne(), p = new k({
     icon: e.join(process.env.VITE_PUBLIC, "icon.png"),
     webPreferences: {
       preload: e.join(F, "preload.mjs")
     }
   }), p.webContents.on("did-finish-load", () => {
     p == null || p.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
-  }), j ? p.loadURL(j) : p.loadFile(e.join(U, "index.html"));
+  }), L ? p.loadURL(L) : p.loadFile(e.join(N, "index.html"));
 }
 P.handle("dialog:open-directory", async (d, m) => {
   let n = m || O();
@@ -72,21 +75,21 @@ P.handle("dialog:open-directory", async (d, m) => {
     }
     n = l;
   }
-  const { canceled: f, filePaths: E } = await K.showOpenDialog({
+  const { canceled: f, filePaths: E } = await J.showOpenDialog({
     properties: ["openDirectory"],
     defaultPath: n
   });
   return f ? null : E[0];
 });
-P.handle("app:get-version", () => w.getVersion());
+P.handle("app:get-version", () => b.getVersion());
 P.handle("app:get-default-path", () => te());
 P.handle("app:process-files", async (d, { filter: m, settings: n }) => {
-  const { sourcePath: f, includeSubfolders: E, typeMode: l, selectedExtensions: $, customExtensions: W, fileNameContains: M, dateStart: A, dateEnd: C, minSize: q, maxSize: B } = m, { targetPath: Y, isMoveMode: k, groupMode: _, monthFormat: H, folderMask: R, conflictStrategy: x } = n, u = (s, i, b) => {
+  const { sourcePath: f, includeSubfolders: E, typeMode: l, selectedExtensions: $, customExtensions: W, fileNameContains: C, dateStart: j, dateEnd: M, minSize: q, maxSize: B } = m, { targetPath: G, isMoveMode: A, groupMode: x, monthFormat: H, folderMask: _, conflictStrategy: R } = n, h = (s, i, w) => {
     const t = {
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
       timestamp: (/* @__PURE__ */ new Date()).toLocaleTimeString(),
       source: i,
-      destination: b,
+      destination: w,
       status: s
     };
     d.sender.send("log-update", t);
@@ -98,62 +101,62 @@ P.handle("app:process-files", async (d, { filter: m, settings: n }) => {
     }), i;
   };
   try {
-    const s = I(f), i = ["jpg", "jpeg", "png", "gif", "webp", "heic", "raw"], b = ["mp4", "mov", "avi", "mkv", "wmv"];
+    const s = I(f), i = ["jpg", "jpeg", "png", "gif", "webp", "heic", "raw"], w = ["mp4", "mov", "avi", "mkv", "wmv"];
     for (const t of s) {
       const c = o.statSync(t), a = e.extname(t).toLowerCase().replace(".", "");
-      let h = !1;
-      if (l === "all" ? h = [...i, ...b].includes(a) : l === "photo" ? h = i.includes(a) : l === "video" ? h = b.includes(a) : l === "selected" ? h = $.includes(a) : l === "custom" && (h = W.split(",").map((T) => T.trim().toLowerCase()).includes(a)), !h || M && !e.basename(t).toLowerCase().includes(M.toLowerCase()) || c.size < q * 1024 || c.size > B * 1024) continue;
+      let u = !1;
+      if (l === "all" ? u = [...i, ...w].includes(a) : l === "photo" ? u = i.includes(a) : l === "video" ? u = w.includes(a) : l === "selected" ? u = $.includes(a) : l === "custom" && (u = W.split(",").map((T) => T.trim().toLowerCase()).includes(a)), !u || C && !e.basename(t).toLowerCase().includes(C.toLowerCase()) || c.size < q * 1024 || c.size > B * 1024) continue;
       const g = c.mtime;
-      if (A && g < new Date(A) || C && g > new Date(C)) continue;
-      const D = g.getFullYear().toString(), Q = (g.getMonth() + 1).toString().padStart(2, "0"), G = g.toLocaleString("en-US", { month: "long" }), J = Math.floor(g.getMonth() / 3 + 1).toString();
+      if (j && g < new Date(j) || M && g > new Date(M)) continue;
+      const D = g.getFullYear().toString(), Y = (g.getMonth() + 1).toString().padStart(2, "0"), K = g.toLocaleString("en-US", { month: "long" }), Q = Math.floor(g.getMonth() / 3 + 1).toString();
       let y = "";
-      if (_ === "years") y = D;
-      else if (_ === "quarters") y = e.join(D, `Q${J}`);
-      else if (_ === "months") {
-        const S = H === "name" ? G : Q;
+      if (x === "years") y = D;
+      else if (x === "quarters") y = e.join(D, `Q${Q}`);
+      else if (x === "months") {
+        const S = H === "name" ? K : Y;
         y = e.join(D, S);
       }
-      R && R !== "N" && (y = R.replace("N", y));
-      const v = e.join(Y, y);
+      _ && _ !== "N" && (y = _.replace("N", y));
+      const v = e.join(G, y);
       o.existsSync(v) || o.mkdirSync(v, { recursive: !0 });
-      const V = e.basename(t);
-      let r = e.join(v, V);
+      const z = e.basename(t);
+      let r = e.join(v, z);
       if (o.existsSync(r)) {
-        if (x === "skip") {
-          u("skipped", t, r);
+        if (R === "skip") {
+          h("skipped", t, r);
           continue;
-        } else if (x !== "replace") {
-          if (x === "compare_and_delete") {
+        } else if (R !== "replace") {
+          if (R === "compare_and_delete") {
             const S = o.statSync(r);
             if (c.size === S.size) {
-              k ? (o.unlinkSync(t), u("deleted_duplicate", t, r)) : u("skipped_duplicate", t, r);
+              A ? (o.unlinkSync(t), h("deleted_duplicate", t, r)) : h("skipped_duplicate", t, r);
               continue;
             } else {
-              const T = e.parse(V).name;
+              const T = e.parse(z).name;
               r = e.join(v, `${T}_${Date.now()}.${a}`);
             }
           }
         }
       }
       try {
-        k ? (o.renameSync(t, r), u("moved", t, r)) : (o.copyFileSync(t, r), u("copied", t, r));
+        A ? (o.renameSync(t, r), h("moved", t, r)) : (o.copyFileSync(t, r), h("copied", t, r));
       } catch (S) {
-        u("error", t, S.message);
+        h("error", t, S.message);
       }
     }
   } catch (s) {
     throw console.error("Processing error:", s), s;
   }
 });
-w.on("window-all-closed", () => {
-  process.platform !== "darwin" && (w.quit(), p = null);
+b.on("window-all-closed", () => {
+  process.platform !== "darwin" && (b.quit(), p = null);
 });
-w.on("activate", () => {
-  L.getAllWindows().length === 0 && N();
+b.on("activate", () => {
+  k.getAllWindows().length === 0 && U();
 });
-w.whenReady().then(N);
+b.whenReady().then(U);
 export {
   ce as MAIN_DIST,
-  U as RENDERER_DIST,
-  j as VITE_DEV_SERVER_URL
+  N as RENDERER_DIST,
+  L as VITE_DEV_SERVER_URL
 };
