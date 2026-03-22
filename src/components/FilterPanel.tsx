@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FolderOpen, Calendar, HardDrive, FileSearch, Settings2 } from 'lucide-react';
 import { FileTypeMode, ScanFilter } from '../types/filter';
@@ -6,24 +6,13 @@ import { FileTypeMode, ScanFilter } from '../types/filter';
 const COMMON_PHOTO = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic'];
 const COMMON_VIDEO = ['mp4', 'mov', 'avi', 'mkv', 'wmv'];
 
-export const FilterPanel = () => {
+export const FilterPanel = ({ filter, setFilter }: {
+    filter: ScanFilter,
+    setFilter: React.Dispatch<React.SetStateAction<ScanFilter>>
+}) => {
     const { t } = useTranslation();
     const today = new Date().toISOString().split('T')[0];
 
-    const [filter, setFilter] = useState<ScanFilter>({
-        sourcePath: window.electronAPI.getRootPath(),
-        includeSubfolders: true,
-        typeMode: 'all',
-        selectedExtensions: [...COMMON_PHOTO, ...COMMON_VIDEO],
-        customExtensions: '',
-        fileNameContains: '',
-        dateStart: '',
-        dateEnd: today,
-        minSize: 0,
-        maxSize: 1024 * 1024 * 10, // 10 ГБ по умолчанию
-    });
-
-    // Логика выбора папки с проверкой существования (встроена в Main Process)
     const handleBrowse = async () => {
         const path = await window.electronAPI.selectFolder(filter.sourcePath);
         if (path) setFilter({ ...filter, sourcePath: path });
@@ -43,7 +32,6 @@ export const FilterPanel = () => {
         <div className="flex flex-col h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
             <div className="flex-1 space-y-8">
 
-                {/* 1. Выбор папки */}
                 <section className="space-y-4">
                     <div className="flex items-center gap-2 text-blue-500 font-bold text-sm uppercase tracking-wider">
                         <HardDrive size={16} />
@@ -73,7 +61,6 @@ export const FilterPanel = () => {
                     </label>
                 </section>
 
-                {/* 2. Типы файлов */}
                 <section className="space-y-4">
                     <div className="flex items-center gap-2 text-blue-500 font-bold text-sm uppercase tracking-wider">
                         <Settings2 size={16} />
@@ -91,7 +78,6 @@ export const FilterPanel = () => {
                         <option value="custom">{t('mode_custom')}</option>
                     </select>
 
-                    {/* Список чекбоксов (только если выбрано 'selected') */}
                     {filter.typeMode === 'selected' && (
                         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 p-4 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
                             {[...COMMON_PHOTO, ...COMMON_VIDEO].map(ext => (
@@ -108,7 +94,6 @@ export const FilterPanel = () => {
                         </div>
                     )}
 
-                    {/* Поле для своих расширений */}
                     {filter.typeMode === 'custom' && (
                         <input
                             placeholder="png, raw, webp..."
@@ -119,10 +104,8 @@ export const FilterPanel = () => {
                     )}
                 </section>
 
-                {/* 3. Поиск и фильтры (Поиск в названии, Дата, Размер) */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    {/* Поиск по имени */}
                     <div className="space-y-3">
                         <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
                             <FileSearch size={14} /> {t('filename_contains')}
@@ -135,19 +118,29 @@ export const FilterPanel = () => {
                         />
                     </div>
 
-                    {/* Период */}
                     <div className="space-y-3">
                         <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
                             <Calendar size={14} /> {t('date_range')}
                         </label>
                         <div className="flex gap-2 items-center">
-                            <input type="date" max={today} className="flex-1 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg text-xs border border-slate-200 dark:border-slate-700" />
+                            <input
+                                type="date"
+                                max={today}
+                                value={filter.dateStart}
+                                onChange={e => setFilter({ ...filter, dateStart: e.target.value })}
+                                className="flex-1 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg text-xs border border-slate-200 dark:border-slate-700"
+                            />
                             <span className="text-slate-400">-</span>
-                            <input type="date" max={today} className="flex-1 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg text-xs border border-slate-200 dark:border-slate-700" />
+                            <input
+                                type="date"
+                                max={today}
+                                value={filter.dateEnd}
+                                onChange={e => setFilter({ ...filter, dateEnd: e.target.value })}
+                                className="flex-1 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg text-xs border border-slate-200 dark:border-slate-700"
+                            />
                         </div>
                     </div>
 
-                    {/* Размер (КБ) */}
                     <div className="space-y-3 md:col-span-2">
                         <label className="text-xs font-bold text-slate-500 uppercase">{t('file_size_kb')}</label>
                         <div className="flex gap-4">

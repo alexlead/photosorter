@@ -27,5 +27,13 @@
     "conflict_strategy": "Если файл уже существует",
     "strategy_skip": "Пропустить",
     "strategy_replace": "Заменить",
-    "strategy_compare_and_delete": "Сравнить и удалить дубль"
+    "strategy_compare_and_delete": "Сравнить и удалить дубль",
+    "log_tab": "Журнал",
+    "waiting_for_process": "Ожидание запуска процесса",
+    "source": "Источник",
+    "destination": "Назначение",
+    "action_move": "Переместить",
+    "action_copy": "Копировать",
+    "action_skip": "Пропустить",
+    "action_replace": "Заменить"
 }

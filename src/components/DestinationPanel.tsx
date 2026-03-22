@@ -1,20 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FolderDown, Copy, Move, Layers, ShieldAlert, Settings } from 'lucide-react';
 import { ConflictStrategy, DestinationSettings, GroupMode, MonthFormat } from '../types/filter';
 
-export const DestinationPanel = () => {
+export const DestinationPanel = ({ settings, setSettings }: {
+    settings: DestinationSettings,
+    setSettings: React.Dispatch<React.SetStateAction<DestinationSettings>>
+}) => {
     const { t } = useTranslation();
     const api = window.electronAPI;
-
-    const [settings, setSettings] = useState<DestinationSettings>({
-        targetPath: api?.getRootPath ? api.getRootPath() : 'C:\\',
-        isMoveMode: true,
-        groupMode: 'years',
-        monthFormat: 'number',
-        folderMask: 'N',
-        conflictStrategy: 'skip',
-    });
 
     const handleBrowse = async () => {
         const path = await api.selectFolder(settings.targetPath);
@@ -25,7 +19,6 @@ export const DestinationPanel = () => {
         <div className="flex flex-col h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
             <div className="flex-1 space-y-8">
 
-                {/* 1. Выбор папки назначения */}
                 <section className="space-y-4">
                     <div className="flex items-center gap-2 text-emerald-500 font-bold text-sm uppercase tracking-wider">
                         <FolderDown size={16} />
@@ -42,7 +35,6 @@ export const DestinationPanel = () => {
                         </button>
                     </div>
 
-                    {/* Переключатель Переместить / Копировать */}
                     <div className="flex gap-4 p-1 bg-slate-100 dark:bg-slate-800 w-fit rounded-xl">
                         <button
                             onClick={() => setSettings({ ...settings, isMoveMode: true })}
@@ -59,7 +51,6 @@ export const DestinationPanel = () => {
                     </div>
                 </section>
 
-                {/* 2. Группировка и Маски */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
                         <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
@@ -105,7 +96,6 @@ export const DestinationPanel = () => {
                     </div>
                 </section>
 
-                {/* 3. Стратегия при конфликтах */}
                 <section className="space-y-4">
                     <div className="flex items-center gap-2 text-amber-500 font-bold text-sm uppercase tracking-wider">
                         <ShieldAlert size={16} />

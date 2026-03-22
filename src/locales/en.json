@@ -27,5 +27,14 @@
     "conflict_strategy": "If file already exists",
     "strategy_skip": "Skip",
     "strategy_replace": "Replace",
-    "strategy_compare_and_delete": "Compare & Delete duplicate"
+    "strategy_compare_and_delete": "Compare & Delete duplicate",
+    "log_tab": "Process Logs",
+    "waiting_for_process": "Waiting for process",
+    "source": "Source",
+    "destination": "Destination",
+    "action_move": "Move",
+    "action_copy": "Copy",
+    "action_skip": "Skip",
+    "action_replace": "Replace",
+    "action_compare_and_delete": "Compare & Delete duplicate"
 }

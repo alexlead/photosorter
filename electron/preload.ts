@@ -23,8 +23,12 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // ...
 })
 
-contextBridge.exposeInMainWorld('electronAPI', { // Ключ должен быть 'electronAPI'
+contextBridge.exposeInMainWorld('electronAPI', {
   getAppVersion: () => process.env.npm_package_version || '1.0.0',
-  getRootPath: () => (process.platform === 'win32' ? 'C:\\' : '/'),
-  selectFolder: (currentPath?: string) => ipcRenderer.invoke('dialog:open-directory', currentPath)
+  getDefaultPath: () => ipcRenderer.invoke('app:get-default-path'),
+  selectFolder: (currentPath?: string) => ipcRenderer.invoke('dialog:open-directory', currentPath),
+  processFiles: (filter: any, settings: any) => ipcRenderer.invoke('app:process-files', { filter, settings }),
+  onLogUpdate: (callback: (log: any) => void) => {
+    ipcRenderer.on('log-update', (_event, log) => callback(log));
+  }
 })
