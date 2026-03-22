@@ -2,6 +2,8 @@
   "name": "photosorter",
   "private": true,
   "version": "1.0.0",
+  "description": "A powerful photo and video organizer",
+  "author": "Aleksandr Razavodovskii",
   "type": "module",
   "scripts": {
     "dev": "vite",

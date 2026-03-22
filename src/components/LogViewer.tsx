@@ -13,11 +13,11 @@ export const LogViewer = ({ logs, onClear }: LogViewerProps) => {
     const waitingForProcess = t('waiting_for_process');
     const source = t('source');
     const destination = t('destination');
-    const action_move = t('action_move');
-    const action_copy = t('action_copy');
-    const action_skip = t('action_skip');
-    const action_replace = t('action_replace');
-    const action_compare_and_delete = t('action_compare_and_delete');
+    // const action_move = t('action_move');
+    // const action_copy = t('action_copy');
+    // const action_skip = t('action_skip');
+    // const action_replace = t('action_replace');
+    // const action_compare_and_delete = t('action_compare_and_delete');
 
     return (
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm flex flex-col h-[400px] mt-6">
