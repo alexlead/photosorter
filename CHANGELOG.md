@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-03-29
+
+### Updated
+- **File Utilities**: Changed the way files are processed to use the file processor instead of the file utility.
+- **File Processor**: Added support for processing files when the application is run in development mode (npm run dev).
+
+### Fixed
+- **Log Viewer**: Fixed an issue where the log viewer would not display logs when the application was run in development mode (npm run dev).
+- **File Processing**: Fixed an issue where the file processor would not process files when the application was run in development mode.
+
 ## [1.0.0] - 2026-03-22
 
 The initial release of PhotoSorter, a powerful desktop application designed to organize messy photo and video archives into a clean, chronological folder structure.

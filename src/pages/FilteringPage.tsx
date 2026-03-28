@@ -33,15 +33,12 @@ export const FilteringPage = () => {
         conflictStrategy: 'skip',
     });
 
-    // Initialize default paths and log listener
     useState(() => {
         const init = async () => {
             if (window.electronAPI) {
                 const defaultSource = await window.electronAPI.getDefaultPath();
                 setFilter(prev => ({ ...prev, sourcePath: defaultSource }));
 
-                // For destination, we might want the same or a default "Pictures" folder
-                // For now just use the same root
                 setSettings(prev => ({ ...prev, targetPath: defaultSource }));
 
                 window.electronAPI.onLogUpdate((log: LogEntry) => {
@@ -59,7 +56,7 @@ export const FilteringPage = () => {
             alert("Please select source and destination folders");
             return;
         }
-        
+
         try {
             await window.electronAPI.processFiles(filter, settings);
         } catch (error) {
